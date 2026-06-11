@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+.Python
+env/
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project runtime
+database/rules.db
+*.db
+*.db-journal
+*.db-wal
+
+# PyInstaller outputs
+*.exe
+*.msi
+
+# Logs
+*.log
