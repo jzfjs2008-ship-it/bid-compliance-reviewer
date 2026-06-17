@@ -2,6 +2,7 @@ import re
 from datetime import datetime
 from .normalizer import Normalizer
 from database.models import load_comparison_rules
+from utils.queue_handler import MessageType
 
 
 OPERATOR_MAP = {}
@@ -101,7 +102,7 @@ class Comparator:
                 result = self._evaluate_rule(rule, bid_data, resp_data_by_slot)
                 results.append(result)
                 if self.queue_handler:
-                    self.queue_handler.put("progress", f"比对规则 [{rule['rule_name']}]: {result['status']}")
+                    self.queue_handler.put(MessageType.PROGRESS, ("Compare", f"比对规则 [{rule['rule_name']}]: {result['status']}"))
             except Exception as e:
                 results.append({
                     "rule_id": rule["id"],
@@ -142,15 +143,15 @@ class Comparator:
                 if cross_field in extracted:
                     bid_val = extracted[cross_field]
                 elif self.queue_handler:
-                    self.queue_handler.put("progress",
-                        f"  跨文档: {cross_slot}.{cross_field} 未提取到")
+                    self.queue_handler.put(MessageType.PROGRESS,
+                        ("Compare", f"  跨文档: {cross_slot}.{cross_field} 未提取到"))
             elif cross_slot in resp_data_by_slot:
                 extracted = resp_data_by_slot[cross_slot].get("extracted", {})
                 if cross_field in extracted:
                     bid_val = extracted[cross_field]
                 elif self.queue_handler:
-                    self.queue_handler.put("progress",
-                        f"  跨文档: {cross_slot}.{cross_field} 未提取到")
+                    self.queue_handler.put(MessageType.PROGRESS,
+                        ("Compare", f"  跨文档: {cross_slot}.{cross_field} 未提取到"))
             # Also try field_bid as fallback
             if bid_val is None and field_bid and bid_data:
                 extracted = bid_data.get("extracted", {})

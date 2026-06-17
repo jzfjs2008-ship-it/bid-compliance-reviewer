@@ -9,6 +9,20 @@ def precheck_files(file_map):
     warnings = []
     errors = []
 
+    total_files = sum(len(files) for files in file_map.values())
+    if total_files == 0:
+        errors.append({
+            "slot": "全部",
+            "level": "error",
+            "message": "请先上传需要审查的文件",
+        })
+        return {
+            "has_error": True,
+            "errors": errors,
+            "warnings": warnings,
+            "can_proceed": False,
+        }
+
     for slot in SLOT_NAMES:
         files = file_map.get(slot, [])
         if not files:

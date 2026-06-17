@@ -2,7 +2,7 @@ import os
 from .extractor import Extractor
 from database.models import load_extraction_rules
 from .normalizer import Normalizer
-from utils.queue_handler import QueueHandler
+from utils.queue_handler import QueueHandler, MessageType
 
 
 PARSER_MAP = {
@@ -28,7 +28,7 @@ def parse_document(file_path, slot=None, queue_handler=None):
         raise ValueError(f"不支持的文件类型: {ext}")
 
     if queue_handler:
-        queue_handler.put("progress", f"正在解析: {os.path.basename(file_path)}")
+        queue_handler.put(MessageType.PROGRESS, ("Parse", f"正在解析: {os.path.basename(file_path)}"))
 
     rules = load_extraction_rules(slot=slot)
     normalizer = Normalizer()
@@ -51,7 +51,7 @@ def parse_document(file_path, slot=None, queue_handler=None):
                 value = normalizer.full_normalize(value)
                 extracted[rule["field_name"]] = value
                 if queue_handler:
-                    queue_handler.put("progress", f"  提取 [{rule['field_name']}] = {value}")
+                    queue_handler.put(MessageType.PROGRESS, ("Extract", f"  提取 [{rule['field_name']}] = {value}"))
         result["extracted"] = extracted
         return result
 
@@ -72,7 +72,7 @@ def parse_document(file_path, slot=None, queue_handler=None):
                 value = normalizer.full_normalize(value)
                 extracted[rule["field_name"]] = value
                 if queue_handler:
-                    queue_handler.put("progress", f"  提取 [{rule['field_name']}] = {value}")
+                    queue_handler.put(MessageType.PROGRESS, ("Extract", f"  提取 [{rule['field_name']}] = {value}"))
         result["extracted"] = extracted
         return result
 
@@ -95,7 +95,7 @@ def parse_document(file_path, slot=None, queue_handler=None):
                 value = normalizer.full_normalize(value)
                 extracted[rule["field_name"]] = value
                 if queue_handler:
-                    queue_handler.put("progress", f"  提取 [{rule['field_name']}] = {value}")
+                    queue_handler.put(MessageType.PROGRESS, ("Extract", f"  提取 [{rule['field_name']}] = {value}"))
         result["extracted"] = extracted
         return result
 

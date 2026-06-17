@@ -170,11 +170,12 @@ class FileSlot(ctk.CTkFrame):
                     text_color=TEXT_PRIMARY,
                 ).pack(side="left", fill="x", expand=True)
                 ctk.CTkButton(
-                    row, text="×", width=22, height=18,
-                    fg_color="transparent", text_color=TEXT_TERTIARY,
-                    hover_color=BG_HOVER, font=(FONT_FAMILY, 11),
+                    row, text="×", width=24, height=20,
+                    fg_color="#C42B1C", text_color="#FFFFFF",
+                    hover_color="#A52616", font=(FONT_FAMILY, 11, "bold"),
+                    corner_radius=3,
                     command=lambda fp=f: self.remove_file(fp),
-                ).pack(side="right")
+                ).pack(side="right", padx=2)
         else:
             self.file_list.grid_remove()
             self.drop_hint.grid()

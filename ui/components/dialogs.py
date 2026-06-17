@@ -3,7 +3,7 @@ from ui.theme import *
 
 
 class ModalDialog(ctk.CTkToplevel):
-    def __init__(self, master, title, message, buttons=None, width=400, height=200):
+    def __init__(self, master, title, message, buttons=None, width=420, height=160):
         super().__init__(master)
         self.title(title)
         self.geometry(f"{width}x{height}")
@@ -19,33 +19,40 @@ class ModalDialog(ctk.CTkToplevel):
         y = (screen_h - height) // 2
         self.geometry(f"+{x}+{y}")
 
-        frame = ctk.CTkFrame(self, fg_color=BG_WHITE)
-        frame.pack(fill="both", expand=True, padx=20, pady=20)
-
-        icon_label = ctk.CTkLabel(frame, text="⚠", font=(FONT_FAMILY, 36), text_color=WARNING)
-        icon_label.pack(pady=(10, 5))
+        frame = ctk.CTkFrame(self, fg_color=BG_WHITE, corner_radius=8)
+        frame.pack(fill="both", expand=True, padx=2, pady=2)
 
         msg_label = ctk.CTkLabel(
-            frame, text=message, wraplength=320,
+            frame, text=message, wraplength=340,
             font=(FONT_FAMILY, FONT_SIZE_NORMAL),
-            text_color=TEXT_PRIMARY,
+            text_color=TEXT_PRIMARY, justify="center",
         )
-        msg_label.pack(pady=10)
+        msg_label.pack(expand=True, pady=(30, 20))
 
         btn_frame = ctk.CTkFrame(frame, fg_color="transparent")
-        btn_frame.pack(pady=10)
+        btn_frame.pack(pady=(0, 20))
 
         buttons = buttons or [{"text": "确定", "result": True, "primary": True}]
         for btn_cfg in buttons:
-            fg = PRIMARY if btn_cfg.get("primary") else "transparent"
-            txt_color = BG_WHITE if btn_cfg.get("primary") else TEXT_PRIMARY
-            btn = ctk.CTkButton(
-                btn_frame, text=btn_cfg["text"],
-                fg_color=fg, text_color=txt_color,
-                font=(FONT_FAMILY, FONT_SIZE_NORMAL),
-                command=lambda r=btn_cfg["result"]: self._close(r),
-            )
-            btn.pack(side="left", padx=5)
+            if btn_cfg.get("primary"):
+                btn = ctk.CTkButton(
+                    btn_frame, text=btn_cfg["text"],
+                    fg_color="#0078D4", text_color="#FFFFFF",
+                    font=(FONT_FAMILY, FONT_SIZE_NORMAL),
+                    corner_radius=4, height=32, width=100,
+                    hover_color="#106EBE",
+                    command=lambda r=btn_cfg["result"]: self._close(r),
+                )
+            else:
+                btn = ctk.CTkButton(
+                    btn_frame, text=btn_cfg["text"],
+                    fg_color="#F0F0F0", text_color="#000000",
+                    font=(FONT_FAMILY, FONT_SIZE_NORMAL),
+                    corner_radius=4, height=32, width=100,
+                    hover_color="#E0E0E0",
+                    command=lambda r=btn_cfg["result"]: self._close(r),
+                )
+            btn.pack(side="left", padx=8)
 
         self.protocol("WM_DELETE_WINDOW", lambda: self._close(None))
 

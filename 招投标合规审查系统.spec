@@ -1,25 +1,16 @@
 # -*- mode: python ; coding: utf-8 -*-
-from PyInstaller.utils.hooks import collect_all
-
-datas = [('database', 'database')]
-binaries = []
-hiddenimports = ['darkdetect', 'PIL._tkinter_finder']
-tmp_ret = collect_all('customtkinter')
-datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
-tmp_ret = collect_all('tkinterdnd2')
-datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
 
 
 a = Analysis(
     ['main.py'],
     pathex=[],
-    binaries=binaries,
-    datas=datas,
-    hiddenimports=hiddenimports,
+    binaries=[],
+    datas=[('database/rules.db', 'database')],
+    hiddenimports=['tkinterdnd2', 'customtkinter', 'fitz', 'docx', 'openpyxl', 'PIL', 'reportlab', 'sqlite3'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=['pandas', 'numpy', 'matplotlib', 'scipy', 'camelot'],
+    excludes=[],
     noarchive=False,
     optimize=0,
 )

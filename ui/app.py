@@ -42,30 +42,21 @@ class MainApp:
         bar.pack(fill="x", padx=0, pady=0)
         bar.pack_propagate(False)
 
-        title_frame = ctk.CTkFrame(bar, fg_color="transparent")
-        title_frame.pack(side="left", fill="y", padx=(PADDING_LARGE, 0))
-
-        ctk.CTkLabel(
-            title_frame, text="招投标合规审查系统",
-            font=(FONT_FAMILY, FONT_SIZE_XL, "bold"),
-            text_color=PRIMARY,
-        ).pack(side="left")
-
         self.btn_start = ctk.CTkButton(
             bar, text="开始审查", command=self._start_review,
-            fg_color=PRIMARY, text_color=BG_WHITE,
+            fg_color="#0078D4", text_color="#FFFFFF",
             font=(FONT_FAMILY, FONT_SIZE_NORMAL),
             corner_radius=4, height=32, width=100,
+            hover_color="#106EBE",
         )
         self.btn_start.pack(side="right", padx=(0, PADDING_LARGE), pady=8)
 
         self.btn_export = ctk.CTkButton(
             bar, text="导出报告", command=self._export_report,
-            fg_color=BG_WHITE, text_color=PRIMARY,
+            fg_color="#F0F0F0", text_color="#000000",
             font=(FONT_FAMILY, FONT_SIZE_NORMAL),
-            border_color=PRIMARY, border_width=1,
             corner_radius=4, height=32, width=100,
-            hover_color=PRIMARY_LIGHT,
+            hover_color="#E0E0E0",
         )
         self.btn_export.pack(side="right", padx=(0, PADDING_NORMAL), pady=8)
 
@@ -145,12 +136,12 @@ class MainApp:
         self.tab_view = ctk.CTkTabview(
             content, fg_color=BG_WHITE,
             corner_radius=6,
-            segmented_button_fg_color=BG_CARD,
-            segmented_button_selected_color=PRIMARY,
-            segmented_button_selected_hover_color=PRIMARY_HOVER,
-            segmented_button_unselected_color=BG_CARD,
-            segmented_button_unselected_hover_color=BG_HOVER,
-            text_color=TEXT_PRIMARY,
+            segmented_button_fg_color="#F0F0F0",
+            segmented_button_selected_color="#0078D4",
+            segmented_button_selected_hover_color="#106EBE",
+            segmented_button_unselected_color="#F0F0F0",
+            segmented_button_unselected_hover_color="#E0E0E0",
+            text_color="#000000",
         )
         self.tab_view.grid(row=1, column=0, sticky="nsew", padx=PADDING_LARGE, pady=(PADDING_LARGE, PADDING_NORMAL))
         self.tab_view._segmented_button.configure(font=(FONT_FAMILY, FONT_SIZE_NORMAL))
@@ -167,6 +158,10 @@ class MainApp:
         tab_risks.columnconfigure(0, weight=1)
         tab_risks.rowconfigure(0, weight=0)
         tab_risks.rowconfigure(1, weight=1)
+        
+        self._update_tab_button_colors()
+        
+        self.tab_view._segmented_button.configure(command=self._on_tab_change)
 
         risk_header = ctk.CTkFrame(tab_risks, fg_color="transparent")
         risk_header.grid(row=0, column=0, sticky="ew", pady=(0, PADDING_SMALL))
@@ -223,6 +218,23 @@ class MainApp:
                 self.preview.set_content(text[:5000], title=os.path.basename(node.data))
             except Exception as e:
                 self.preview.set_content(f"无法预览: {e}", title=os.path.basename(node.data))
+
+    def _on_tab_change(self, value):
+        self._update_tab_button_colors()
+
+    def _update_tab_button_colors(self):
+        try:
+            segmented_button = self.tab_view._segmented_button
+            buttons = segmented_button._buttons_dict
+            current_value = segmented_button.get()
+            
+            for name, btn in buttons.items():
+                if name == current_value:
+                    btn.configure(text_color="#FFFFFF")
+                else:
+                    btn.configure(text_color="#000000")
+        except Exception:
+            pass
 
     def _on_risk_click(self, item):
         detail = item.get("detail", "")
